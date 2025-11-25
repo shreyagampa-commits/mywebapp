@@ -70,3 +70,37 @@ pipeline {
         }
     }
 }
+
+
+
+pipeline {
+    agent any
+    tools {
+        maven 'MAVEN_HOME'
+    }
+    stages {
+        stage('git repo & clean') {
+            steps {
+                bat "rmdir /s /q octYogitaJava || exit 0"
+                bat "git clone https://github.com/anujyog1/octYogitaJava.git"
+                bat "mvn -Dmaven.compiler.source=8 -Dmaven.compiler.target=8 clean -f octYogitaJava"
+            }
+        }
+        stage('install') {
+            steps {
+                bat "mvn -Dmaven.compiler.source=8 -Dmaven.compiler.target=8 install -f octYogitaJava"
+            }
+        }
+        stage('test') {
+            steps {
+                bat "mvn -Dmaven.compiler.source=8 -Dmaven.compiler.target=8 test -f octYogitaJava"
+            }
+        }
+        stage('package') {
+            steps {
+                bat "mvn -Dmaven.compiler.source=8 -Dmaven.compiler.target=8 package -f octYogitaJava"
+            }
+        }
+    }
+}
+
