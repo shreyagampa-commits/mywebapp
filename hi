@@ -1,0 +1,72 @@
+script
++ new item -script name
+pipeline
+in triggers click build periodically 
+* * * * *
+paste script 
+in script go to build
+
+
+pipeline {
+    agent any
+    tools{
+        maven 'MAVEN_HOME'
+    }
+    stages {
+        stage('git repo & clean') {
+            steps {
+                bat "rmdir  /s /q octYogitaJava || exit 0"
+                bat "git clone https://github.com/anujyog1/octYogitaJava.git"
+                bat "mvn clean -f octYogitaJava"
+            }
+        }
+        stage('install') {
+            steps {
+                bat "mvn install -f octYogitaJava"
+            }
+        }
+        stage('test') {
+            steps {
+                bat "mvn test -f octYogitaJava"
+            }
+        }
+        stage('package') {
+            steps {
+                bat "mvn package -f octYogitaJava"
+            }
+        }
+    }
+}
+
+
+
+pipeline {
+    agent any
+    tools {
+        maven 'MAVEN_HOME'
+    }
+    stages {
+        stage('Clone Repo & Clean') {
+            steps {
+                bat "rmdir /s /q HelloWorldWeb || exit 0"
+                bat "git clone https://github.com/shreyagampa-commits/HelloWorldWeb.git"
+                bat "mvn clean -f HelloWorldWeb/pom.xml"
+            }
+        }
+        stage('Install') {
+            steps {
+                bat "mvn install -f HelloWorldWeb/pom.xml"
+            }
+        }
+        stage('Test') {
+            steps {
+                bat "mvn test -f HelloWorldWeb/pom.xml"
+            }
+        }
+        stage('Package') {
+            steps {
+                bat "mvn package -f HelloWorldWeb/pom.xml"
+            }
+        }
+    }
+}
